@@ -5,6 +5,14 @@ import { currencyFormatter } from "../util/formatting";
 import Input from "./UI/Input.jsx";
 import Button from "./UI/Button.jsx";
 import UserProgressContext from "../store/UseProgressContext.jsx";
+import useHttp from "../hooks/useHTTP.jsx";
+
+const configObject = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+};
 
 export default function Checkout() {
   const cartCtx = useContext(CartContext);
@@ -13,6 +21,10 @@ export default function Checkout() {
     return acc + item.price * item.quantity;
   }, 0);
 
+  const { data, isLoading, error, sendRequest } = useHttp(
+    "http://localhost:3000/orders",
+    configObject
+  );
   function handleClose() {
     userProgressCtx.hideCheckout();
   }
@@ -22,7 +34,44 @@ export default function Checkout() {
 
     const fd = new FormData(e.target);
     const customerData = Object.fromEntries(fd.entries());
+
+    sendRequest(
+      JSON.stringify({
+        order: { items: cartCtx.items, customer: customerData },
+      })
+    );
   }
+
+  // fetch("http://localhost:3000/orders", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     order: {
+  //       items: cartCtx.items,
+  //       customer: customerData,
+  //     },
+  //   }),
+  // });
+
+  // if (data && !error) {
+  //   return (
+  //     <Modal
+  //       open={userProgressCtx.progress === "checkout"}
+  //       onClose={handleClose}
+  //     >
+  //       <h2>Success</h2>
+  //       <p>Your order was submitted successfully</p>
+  //       <p>
+  //         We will get back to you with more details within the next few minutes
+  //       </p>
+  //       <p className="modal-actions">
+  //         <Button onClick={handleClose}>Okay</Button>
+  //       </p>
+  //     </Modal>
+  //   );
+  // }
 
   return (
     <Modal open={userProgressCtx.progress === "checkout"} onClose={handleClose}>
