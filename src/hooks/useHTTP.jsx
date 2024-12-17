@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function useHttp(url, config, initialData) {
   async function sendHttpRequest(url, config) {
+    console.log(url, config);
     const response = await fetch(url, config);
 
     const resData = await response.json();
@@ -21,6 +22,7 @@ export default function useHttp(url, config, initialData) {
   const sendRequest = useCallback(
     async function (data) {
       setIsLoading(true);
+
       try {
         const resData = await sendHttpRequest(url, { ...config, body: data });
         setData(resData);
