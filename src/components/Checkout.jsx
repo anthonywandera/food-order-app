@@ -6,6 +6,7 @@ import Input from "./UI/Input.jsx";
 import Button from "./UI/Button.jsx";
 import UserProgressContext from "../store/UseProgressContext.jsx";
 import useHttp from "../hooks/useHTTP.jsx";
+import Err from "./Err.jsx";
 
 const configObject = {
   method: "POST",
@@ -70,23 +71,23 @@ export default function Checkout() {
   //   }),
   // });
 
-  // if (data && !error) {
-  //   return (
-  //     <Modal
-  //       open={userProgressCtx.progress === "checkout"}
-  //       onClose={handleClose}
-  //     >
-  //       <h2>Success</h2>
-  //       <p>Your order was submitted successfully</p>
-  //       <p>
-  //         We will get back to you with more details within the next few minutes
-  //       </p>
-  //       <p className="modal-actions">
-  //         <Button onClick={handleClose}>Okay</Button>
-  //       </p>
-  //     </Modal>
-  //   );
-  // }
+  if (data && !error) {
+    return (
+      <Modal
+        open={userProgressCtx.progress === "checkout"}
+        onClose={handleClose}
+      >
+        <h2>Success</h2>
+        <p>Your order was submitted successfully</p>
+        <p>
+          We will get back to you with more details within the next few minutes
+        </p>
+        <p className="modal-actions">
+          <Button onClick={handleClose}>Okay</Button>
+        </p>
+      </Modal>
+    );
+  }
 
   return (
     <Modal open={userProgressCtx.progress === "checkout"} onClose={handleClose}>
@@ -100,6 +101,8 @@ export default function Checkout() {
           <Input label="Postal Code" type="text" id="postal-code" />
           <Input label="City" type="text" id="city" />
         </div>
+
+        {error && <Err title="Failed to submit order" message={error} />}
 
         <p className="modal-actions">{actions}</p>
       </form>

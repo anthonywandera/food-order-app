@@ -1,7 +1,7 @@
 // import { useState, useEffect } from "react";
 import MealItem from "./MealItem.jsx";
 import useHttp from "../hooks/useHTTP.jsx";
-import Error from "./Error.jsx";
+import Err from "./Err.jsx";
 
 const requestConfig = {};
 
@@ -34,7 +34,7 @@ export default function Meals() {
   }
 
   if (error) {
-    return <Error title="Failed to fetch meals" message={error} />;
+    return <Err title="Failed to fetch meals" message={error} />;
   }
 
   return (
