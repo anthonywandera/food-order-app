@@ -1,6 +1,6 @@
 import Modal from "./UI/Modal.jsx";
 import CartContext from "../store/CartContext";
-import { useContext } from "react";
+import { useContext, useActionState } from "react";
 import { currencyFormatter } from "../util/formatting";
 import Input from "./UI/Input.jsx";
 import Button from "./UI/Button.jsx";
@@ -24,7 +24,7 @@ export default function Checkout() {
 
   const {
     data,
-    isLoading: isSending,
+    // isLoading: isSending,
     error,
     sendRequest,
     clearData,
@@ -40,6 +40,24 @@ export default function Checkout() {
     clearData();
   }
 
+  async function checkoutAction(prevState, fd) {
+    // e.preventDefault();
+
+    // const fd = new FormData(e.target);
+    const customerData = Object.fromEntries(fd.entries());
+
+    await sendRequest(
+      JSON.stringify({
+        order: { items: cartCtx.items, customer: customerData },
+      })
+    );
+  }
+
+  const [formState, formAction, isSending] = useActionState(
+    checkoutAction,
+    null
+  );
+
   let actions = (
     <>
       <Button onClick={handleClose} type="button" textOnly>
@@ -51,19 +69,6 @@ export default function Checkout() {
 
   if (isSending) {
     actions = <span>Sending order data...</span>;
-  }
-
-  async function handleSubmit(fd) {
-    // e.preventDefault();
-
-    // const fd = new FormData(e.target);
-    const customerData = Object.fromEntries(fd.entries());
-
-    await sendRequest(
-      JSON.stringify({
-        order: { items: cartCtx.items, customer: customerData },
-      })
-    );
   }
 
   // fetch("http://localhost:3000/orders", {
@@ -99,7 +104,7 @@ export default function Checkout() {
 
   return (
     <Modal open={userProgressCtx.progress === "checkout"} onClose={handleClose}>
-      <form action={handleSubmit}>
+      <form action={formAction}>
         <h2>Checkout</h2>
         <p>Total Amount: {currencyFormatter.format(cartTotal)}</p>
         <Input label="Full Name" type="text" id="name" />
