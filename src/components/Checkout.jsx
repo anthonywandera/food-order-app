@@ -28,7 +28,7 @@ export default function Checkout() {
     error,
     sendRequest,
     clearData,
-  } = useHttp("http://localhost:3000/orders", configObject);
+  } = useHttp("https://food-order-app-backend-wbpm.onrender.com/orders", configObject);
 
   function handleClose() {
     userProgressCtx.hideCheckout();

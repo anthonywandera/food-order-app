@@ -27,7 +27,11 @@ export default function Meals() {
     data: loadedMeals,
     error,
     isLoading,
-  } = useHttp("http://localhost:3000/meals", requestConfig, []);
+  } = useHttp(
+    "https://food-order-app-backend-wbpm.onrender.com/meals",
+    requestConfig,
+    []
+  );
 
   if (isLoading) {
     return <p className="center">Fetching data...</p>;
