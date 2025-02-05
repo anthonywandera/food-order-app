@@ -37,7 +37,7 @@ function cartReducer(state, action) {
     const existingCartItem = state.items[existingCartItemIndex];
     const updatedItems = [...state.items];
 
-    if (existingCartItem.quantity === 1) {
+    if (existingCartItem.quantity === 0) {
       updatedItems.splice(existingCartItemIndex, 1);
     } else {
       const updatedItem = {
